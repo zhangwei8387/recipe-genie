@@ -2,8 +2,211 @@ openapi: 3.0.3
 info:
   title: RecipeGenie API
   version: 1.0.0
-  description: API for RecipeGenie - 食谱精灵
+  description: |
+    API for RecipeGenie - 食谱精灵.
+    
+    本 API 包含两部分：
+    1. **Standard REST API**: 用于传统的资源管理（用户、收藏食谱等）。
+    2. **Agent API (AG-UI)**: 由 `agent-framework-ag-ui` 自动生成的端点，用于与智能体进行流式对话。
+       (注：AG-UI 端点通常挂载在 `/api/v1/agent` 或类似路径下，此处仅作说明，不详细展开其内部协议结构)
+
 servers:
-  - url: https://api.example.com
-paths: {}
-components: {}
+  - url: http://localhost:8000/api/v1
+    description: Local Development Server
+
+paths:
+  # -------------------------------------------------------------------------
+  # Authentication & Users
+  # -------------------------------------------------------------------------
+  /auth/login:
+    post:
+      summary: 用户登录
+      tags: [Auth]
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                password:
+                  type: string
+      responses:
+        '200':
+          description: Login successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Token'
+
+  /users/me:
+    get:
+      summary: 获取当前用户信息
+      tags: [Users]
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Current user info
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+
+  # -------------------------------------------------------------------------
+  # Recipes (Standard CRUD)
+  # -------------------------------------------------------------------------
+  /recipes:
+    get:
+      summary: 获取食谱列表 (支持搜索/过滤)
+      tags: [Recipes]
+      parameters:
+        - name: q
+          in: query
+          schema:
+            type: string
+          description: Search query
+      responses:
+        '200':
+          description: List of recipes
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Recipe'
+    post:
+      summary: 创建新食谱 (手动或保存 Agent 生成的结果)
+      tags: [Recipes]
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RecipeCreate'
+      responses:
+        '201':
+          description: Recipe created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Recipe'
+
+  /recipes/{id}:
+    get:
+      summary: 获取食谱详情
+      tags: [Recipes]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Recipe details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Recipe'
+
+  # -------------------------------------------------------------------------
+  # Agent Interaction (AG-UI Placeholder)
+  # -------------------------------------------------------------------------
+  /agent/chat:
+    post:
+      summary: (AG-UI) 发送消息给智能体
+      description: |
+        此端点由 `agent-framework-ag-ui` 托管。
+        通常接受 JSON 格式的消息，并返回 SSE (Server-Sent Events) 流。
+        前端需使用兼容 AG-UI 协议的客户端进行连接。
+      tags: [Agent]
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                thread_id:
+                  type: string
+      responses:
+        '200':
+          description: SSE Stream
+          content:
+            text/event-stream:
+              schema:
+                type: string
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    Token:
+      type: object
+      properties:
+        access_token:
+          type: string
+        token_type:
+          type: string
+    
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+        username:
+          type: string
+        email:
+          type: string
+    
+    Recipe:
+      type: object
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+        description:
+          type: string
+        ingredients:
+          type: array
+          items:
+            type: string
+        steps:
+          type: array
+          items:
+            type: string
+        nutrition:
+          type: object
+        created_at:
+          type: string
+          format: date-time
+    
+    RecipeCreate:
+      type: object
+      required: [title]
+      properties:
+        title:
+          type: string
+        description:
+          type: string
+        ingredients:
+          type: array
+          items:
+            type: string
+        steps:
+          type: array
+          items:
+            type: string
+        nutrition:
+          type: object

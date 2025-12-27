@@ -84,12 +84,14 @@ graph TD
   - `UserModule`: 个人中心、偏好设置。
 
 ### 4.2 后端 (FastAPI)
-- **Routers**: 定义 RESTful 接口 (`/api/v1/recipes`, `/api/v1/chat`, `/api/v1/auth`)。
+- **Routers**: 
+  - **Standard API**: 定义传统 RESTful 接口 (`/api/v1/recipes`, `/api/v1/auth`) 用于数据 CRUD。
+  - **Agent API (AG-UI)**: 集成 `agent-framework-ag-ui`，自动暴露符合 AG-UI 协议的端点（支持 SSE 流式传输、工具调用渲染等），用于前端与智能体交互。
 - **Models**: Pydantic 模型用于请求/响应验证，SQLModel 用于数据库映射。
 - **Dependencies**: 依赖注入（DB Session, Current User）。
 
 ### 4.3 多智能体架构 (Microsoft Agent Framework)
-利用 **Agent Framework Workflows** 构建协作流：
+利用 **Agent Framework Workflows** 构建协作流，并通过 **AG-UI** 协议暴露：
 1.  **Workflow Definition**: 定义图导向的执行流程，管理状态流转。
 2.  **Chef Agent (主厨)**: 负责根据需求生成食谱步骤和配料。
 3.  **Nutritionist Agent (营养师)**: 分析食谱营养成分，提出健康建议。
