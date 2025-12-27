@@ -1,0 +1,9 @@
+openapi: 3.0.3
+info:
+  title: RecipeGenie API
+  version: 1.0.0
+  description: API for RecipeGenie - 食谱精灵
+servers:
+  - url: https://api.example.com
+paths: {}
+components: {}
