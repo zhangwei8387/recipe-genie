@@ -1,7 +1,7 @@
 # 系统架构概览 (System Architecture Overview)
 
 ## 1. 架构愿景
-RecipeGenie 旨在构建一个基于多智能体（Multi-Agent）协作的智能食谱生成与助手平台。系统采用前后端分离架构，前端使用 **Angular** 构建响应式单页应用（SPA），后端采用 **FastAPI** 提供高性能 RESTful API，并集成 **Microsoft AutoGen** 作为多智能体编排框架。数据持久化在 MVP 阶段使用 **SQLite**。
+RecipeGenie 旨在构建一个基于多智能体（Multi-Agent）协作的智能食谱生成与助手平台。系统采用前后端分离架构，前端使用 **Angular** 构建响应式单页应用（SPA），后端采用 **FastAPI** 提供高性能 RESTful API，并集成 **Microsoft Agent Framework** 作为多智能体编排框架。数据持久化在 MVP 阶段使用 **SQLite**。
 
 ## 2. 技术栈 (Technology Stack)
 
@@ -9,7 +9,7 @@ RecipeGenie 旨在构建一个基于多智能体（Multi-Agent）协作的智能
 | :--- | :--- | :--- |
 | **Frontend** | **Angular** (Latest) | 强类型、模块化、适合构建复杂交互的 SPA。使用 RxJS 处理异步流。 |
 | **Backend** | **Python 3.10+** / **FastAPI** | 高性能、易于集成 AI 库、原生支持异步 (AsyncIO)。 |
-| **AI Framework** | **Microsoft AutoGen** | 支持多智能体对话、任务编排与协作。 |
+| **AI Framework** | **Microsoft Agent Framework** | 微软最新推出的统一智能体框架（AutoGen 与 Semantic Kernel 的继任者），支持强类型的多智能体工作流编排。 |
 | **Database** | **SQLite** (MVP) | 轻量级、零配置，适合 MVP 快速迭代。未来可迁移至 PostgreSQL。 |
 | **ORM** | **SQLModel** (or SQLAlchemy) | 结合 Pydantic 与 SQLAlchemy，完美契合 FastAPI。 |
 | **Task Queue** | (Optional for MVP) | 暂不引入复杂 MQ，利用 Python `asyncio` 处理并发，必要时引入 Redis + Celery。 |
@@ -36,9 +36,9 @@ graph TD
             ChatManager[Chat Manager]
         end
         
-        subgraph "AI Agent Layer (AutoGen)"
-            Orchestrator[User Proxy / Orchestrator Agent]
-            ChefAgent[Chef Agent (Recipe Gen)]
+        subgraph "AI Agent Layer (Microsoft Agent Framework)"
+            WorkflowEngine[Workflow Engine]
+            ChefAgent[Chef Agent]
             NutritionistAgent[Nutritionist Agent]
             ReviewerAgent[Reviewer Agent]
         end
@@ -60,10 +60,10 @@ graph TD
     API --> RecipeManager
     API --> ChatManager
     
-    ChatManager <-->|Task Handoff| Orchestrator
-    Orchestrator <-->|Conversation| ChefAgent
-    Orchestrator <-->|Conversation| NutritionistAgent
-    Orchestrator <-->|Conversation| ReviewerAgent
+    ChatManager <-->|Invoke Workflow| WorkflowEngine
+    WorkflowEngine <-->|Orchestrate| ChefAgent
+    WorkflowEngine <-->|Orchestrate| NutritionistAgent
+    WorkflowEngine <-->|Orchestrate| ReviewerAgent
     
     ChefAgent -.->|API Call| LLM_API
     NutritionistAgent -.->|API Call| LLM_API
@@ -88,15 +88,15 @@ graph TD
 - **Models**: Pydantic 模型用于请求/响应验证，SQLModel 用于数据库映射。
 - **Dependencies**: 依赖注入（DB Session, Current User）。
 
-### 4.3 多智能体架构 (Multi-Agent System)
-利用 AutoGen 构建协作流：
-1.  **User Proxy Agent**: 接收用户输入，作为会话管理者。
+### 4.3 多智能体架构 (Microsoft Agent Framework)
+利用 **Agent Framework Workflows** 构建协作流：
+1.  **Workflow Definition**: 定义图导向的执行流程，管理状态流转。
 2.  **Chef Agent (主厨)**: 负责根据需求生成食谱步骤和配料。
 3.  **Nutritionist Agent (营养师)**: 分析食谱营养成分，提出健康建议。
 4.  **Reviewer Agent (审核员)**: 检查食谱的合理性与安全性（如过敏原）。
 
 **工作流示例**:
-用户输入: "我想吃低脂的鸡肉晚餐" -> `User Proxy` -> `Chef Agent` (生成草稿) -> `Nutritionist Agent` (计算卡路里并建议减少油量) -> `Chef Agent` (修改食谱) -> `User Proxy` (返回最终结果)。
+用户输入 -> `ChatManager` 启动工作流 -> `Chef Agent` 生成草稿 -> 路由至 `Nutritionist Agent` 优化 -> 路由至 `Reviewer Agent` 审核 -> 最终输出。
 
 ## 5. 数据模型 (Data Schema - MVP)
 
