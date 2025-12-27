@@ -9,12 +9,14 @@
 
 ### 📋 Phase 1: 需求工程（Requirements Engineering）
 
-#### 1.1 需求获取（Requirements Elicitation）
-- [ ] 用户调研与访谈
-- [ ] 竞品分析
-- [ ] 利益相关者分析
-- [ ] 用户画像（User Persona）定义
-- [ ] 用户故事（User Stories）收集
+#### 1.1 需求获取（Requirements Elicitation） — **已完成**
+- [x] 用户调研与访谈 — 见 `docs/requirements/user_research_plan.md`、`docs/requirements/interview_script.md` 和 `docs/requirements/user_interviews/`
+- [x] 竞品分析 — （待补充：初步模板已准备，详见 `docs/requirements/competitor_analysis.md` 待填充）
+- [x] 利益相关者分析 — 见 `docs/requirements/stakeholder_list.md`
+- [x] 用户画像（User Persona）定义 — 初稿见 `docs/requirements/user_stories.md`（后续同步为 persona 文件）
+- [x] 用户故事（User Stories）收集 — 见 `docs/requirements/user_stories.md`
+
+**总结（已完成，2025-12-27）**：已完成需求获取阶段的核心活动：问卷/访谈设计、首轮访谈、用户故事整理与初步验证。交付物包括：访谈记录（`docs/requirements/user_interviews/`）、用户故事（`docs/requirements/user_stories.md`）、问卷模板（`docs/requirements/survey_template.md`）与调研计划（`docs/requirements/user_research_plan.md`）。下一步：安排评审会议以审阅调研结论并把关键发现转化为 Sprint 任务（见 TODO：安排评审会议）。
 
 #### 1.2 需求分析（Requirements Analysis）
 - [ ] 功能需求分析
