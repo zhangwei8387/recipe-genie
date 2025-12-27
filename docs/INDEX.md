@@ -7,7 +7,7 @@
 ## 主要文档目录
 
 - [软件开发计划文档](./plans/SOFTWARE_DEVELOPMENT_PLAN.md) — 项目整体的阶段划分、里程安排与流程说明。
-- [产品需求（Requirements）](./requirements/) — 包含 正式 PRD 与 SRS 模板与用户故事（`requirements/PRODUCT_REQUIREMENTS.md`、`requirements/SRS_template.md`）。
+- [产品需求（Requirements）](./requirements/) — 包含 正式 PRD、SRS 与用户故事（`requirements/PRODUCT_REQUIREMENTS.md`、`requirements/SOFTWARE_REQUIREMENTS_SPECIFICATION.md`）。
 - [技术架构（Architecture）](./architecture/) — 架构概览、C4 建议图与决策记录（`architecture/architecture_overview.md`）。
 - [API 文档（API）](./api/) — OpenAPI 模板与接口端点说明（`api/openapi.yaml`）。
 - [UI / UX 设计（Design）](./design/) — 设计系统与线框图说明（`design/design_system.md`）。
