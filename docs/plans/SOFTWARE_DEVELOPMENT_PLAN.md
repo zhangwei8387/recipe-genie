@@ -40,14 +40,14 @@
 ### 🎨 Phase 2: 系统设计（System Design）
 
 #### 2.1 架构设计（Architecture Design）
-- [ ] 系统架构选型
-- [ ] 技术栈选择与评估
+- [x] 系统架构选型 — 见 `docs/architecture/architecture_overview.md`
+- [x] 技术栈选择与评估 — 见 `docs/adr/0001-technology-stack.md`
 - [ ] 架构风格决策（Serverless/Microservices/Monolithic）
-- [ ] 系统架构图（C4模型）
+- [x] 系统架构图（C4模型） — 见 `docs/architecture/architecture_overview.md`
   - Context Diagram（上下文图）
   - Container Diagram（容器图）
   - Component Diagram（组件图）
-- [ ] 部署架构图
+- [x] 部署架构图 — 见 `docs/architecture/architecture_overview.md`
 
 #### 2.2 数据设计（Data Design）
 - [ ] 概念数据模型（ER图）
